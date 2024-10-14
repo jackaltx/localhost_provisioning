@@ -1,0 +1,30 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    myemail: jack@lavnet.net
+
+  tasks:
+
+  - name: "check if .acme.sh exists"
+    ansible.builtin.stat:
+      path: /root/.acme.sh
+    register: acme_exists
+
+  - ansible.builtin.debug:
+      var: acme_exists
+      verbosity: 1
+
+
+  - name: "Install acme.sh"
+    ansible.builtin.shell:
+    args:
+      cmd: "curl https://get.acme.sh | sh -s email={{ myemail }}"
+    when: not acme_exists.stat.exists
+
+
+
+

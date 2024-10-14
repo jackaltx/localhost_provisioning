@@ -1,0 +1,25 @@
+---
+# tasks file for telegraf
+
+############# pre Debian 12 requirement
+- name: "Prepare the apt keyring directory"
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+
+- name: "Get telegraf keyring"
+  ansible.builtin.get_url:
+    url: https://repos.influxdata.com/influxdata-archive_compat.key
+    dest: /etc/apt/keyrings/influxdata-archive_compat.key
+
+- name: "setup telegraf apt repo"
+  ansible.builtin.copy:
+    src: influxdata.list
+    dest: /etc/apt/sources.list.d/influxdata.list
+
+- name: "Install Telegraf via Package"
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - telegraf
+

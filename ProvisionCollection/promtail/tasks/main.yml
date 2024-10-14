@@ -1,0 +1,27 @@
+---
+# tasks file for promtail
+
+############# pre Debian 12 requirement
+- name: "Prepare the apt keyring directory"
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+
+
+##################
+- name: "Get the grafana gpg key used for promtail and grafana"
+  ansible.builtin.shell:
+    cmd: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg"
+
+
+- name: "setup Promtail (Grafana)  apt repo"
+  ansible.builtin.copy:
+    src: grafana.list
+    dest: /etc/apt/sources.list.d/grafana.list
+
+- name: "Install Promtail package"
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - promtail
+

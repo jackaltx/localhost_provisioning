@@ -15,7 +15,12 @@
 #  Download
 #
 
-# for now don't do the download
+- name: Download Godea Version 1.22.3
+  ansible.builtin.get_url:
+    url: https://dl.gitea.com/gitea/1.22.3/gitea-1.22.3-linux-amd64
+    dest: /usr/local/bin/gitea1
+    mode: '0755'
+
 
 ##
 #  Create Gidea user
@@ -50,33 +55,22 @@
     mode: '0750'
     state: directory
 
-- ansible.builtin.file:
-    path: /var/lib/gitea/custom
-    owner: git
-    group: git
+- name: "Next level directories"
+  ansible.builtin.file:
+    path: "/var/lib/gitea/{{ item }}"
     mode: '0750'
-    state: directory
+  with_list:
+    - custom
+    - data
+    - log
 
-- ansible.builtin.file:
-    path: /var/lib/gitea/data
-    owner: git
-    group: git
-    mode: '0750'
-    state: directory
-
-- ansible.builtin.file:
-    path: /var/lib/gitea/log
-    owner: git
-    group: git
-    mode: '0750'
-    state: directory
 
 - name: Build etc
   ansible.builtin.file:
     path: /etc/gitea
     owner: root
     group: git
-    mode: '0770'
+    mode: '0750'
     state: directory
 
 
@@ -92,7 +86,7 @@
     group: root
     mode: '0644'
 
-- name: Enable service
+- name: Enable service and start
   ansible.builtin.systemd_service:
     state: started
     name: gitea
