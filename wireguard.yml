@@ -1,0 +1,40 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    myemail: jack@lavnet.net
+    myuser: lavender
+    monitor_ip: 127.0.0.1
+
+  tasks:
+  - name: :"check if /etc/wireguard exists"
+    ansible.builtin.stat:
+      path: /etc/wireguard/publickey
+    register: wg_exists
+
+  - ansible.builtin.debug:
+      var: wg_exists
+
+  - name: "create /etc/wireguard"
+    ansible.builtin.file:
+      path: /etc/wireguard
+      state: directory     
+
+  - name: "wireguard"
+    ansible.builtin.shell:
+    args:
+      cmd:  "wg genkey | tee /etc/wireguard/privatekey  | wg pubkey > /etc/wireguard/publickey"
+    when: not wg_exists.stat.exists
+
+  - name: "set wireguard conf permissions"
+    ansible.builtin.file:
+      path: "/etc/wireguard/{{ item }}"
+      mode: 0600
+    with_list:
+      -  publickey
+      -  privatekey
+
+

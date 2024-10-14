@@ -1,0 +1,30 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    monitor_ip: 127.0.0.1
+
+  tasks:
+  
+  # https://www.linuxtechi.com/install-kubernetes-cluster-on-debian/
+
+  ##################
+  - name: "Get the kubernetes key"
+    ansible.builtin.shell:
+      cmd: "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+  - name: "Install kubernetes apt repo"
+    ansible.builtin.shell:
+      cmd: "'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list"
+
+  ##################
+  - name: "Install kubernetes  packages"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - kubelet
+        - kubadmin
+        - kubectl
+

@@ -1,0 +1,127 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    myemail: jack@lavnet.net
+    myuser: lavender
+    monitor_ip: 127.0.0.1
+
+  tasks:
+  
+  - name: "Basic Packages"
+    ansible.builtin.apt:
+      pkg:
+      - vim
+      - tree
+      - curl
+      - socat
+      - wireguard
+      - sudo
+      - gpg
+      - apt-transport-https
+      - software-properties-common
+      - wget
+
+  - name: "sudo the user"
+    ansible.builtin.user:
+      name: "{{ myuser }}"
+      groups: sudo
+      append: yes
+
+
+
+
+
+  - name: "check if .acme.sh exists"
+    ansible.builtin.stat:
+      path: /root/.acme.sh
+    register: acme_exists
+
+  - ansible.builtin.debug:
+      var: acme_exists
+
+  - name: "acme.sh"
+    ansible.builtin.shell:
+    args:
+      cmd: "curl https://get.acme.sh | sh -s email={{ myemail }}"
+    when: not acme_exists.stat.exists
+
+
+
+
+
+  - name: :"check if /etc/wireguard exists"
+    ansible.builtin.stat:
+      path: /etc/wireguard/publickey
+    register: wg_exists
+
+  - ansible.builtin.debug:
+      var: wg_exists
+
+  - name: "create /etc/wireguard"
+    ansible.builtin.file:
+      path: /etc/wireguard
+      state: directory     
+
+  - name: "wireguard"
+    ansible.builtin.shell:
+    args:
+      cmd:  "wg genkey | tee /etc/wireguard/privatekey  | wg pubkey > /etc/wireguard/publickey"
+    when: not wg_exists.stat.exists
+
+  - name: "set wireguard conf permissions"
+    ansible.builtin.file:
+      path: "/etc/wireguard/{{ item }}"
+      mode: 0600
+    with_list:
+      -  publickey
+      -  privatekey
+
+
+  - name: "Prepare the apt keyring directory"
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+        
+  - name: "Get the grafana gpg key used for promtail and grafana"
+    ansible.builtin.shell:
+      cmd: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg"
+
+  - name: "Install grafana apt repo"
+    ansible.builtin.shell:
+      cmd: "echo 'deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main' | tee /etc/apt/sources.list.d/grafana.list"
+
+        
+  - name: "Get telegraf keyring"
+    ansible.builtin.shell:
+      cmd: "curl -fsSL https://repos.influxdata.com/influxdata-archive_compat.key -o /etc/apt/keyrings/influxdata-archive_compat.key "
+
+  - name: "setup telegraf apt repo"
+    ansible.builtin.shell:
+      cmd: echo "deb [signed-by=/etc/apt/keyrings/influxdata-archive_compat.key] https://repos.influxdata.com/debian stable main" | tee /etc/apt/sources.list.d/influxdata.list
+
+  - name: "get influx key"
+    ansible.builtin.shell:
+      cmd: curl -s https://repos.influxdata.com/influxdata-archive_compat.key > influxdata-archive_compat.key
+
+  - name: "add to apt"
+    ansible.builtin.shell:
+      cmd: echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+
+  - name: "add influx apt repo"
+    ansible.builtin.shell:
+      cmd: echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+
+  - name: "Loki and Promtail packages"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - loki
+        - promtail
+        - telegraf
+        - influxdb
+        - grafana
+

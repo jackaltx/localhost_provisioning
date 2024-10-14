@@ -1,0 +1,26 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    myemail: jack@lavnet.net
+    myuser: lavender
+    monitor_ip: 127.0.0.1
+
+  tasks:
+  
+  - name: "Basic Packages"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+      - vim
+      - tree
+      - curl
+      - socat
+      - sudo
+      - gpg
+      - wget
+      - ca-certificates 
+      - net-tools

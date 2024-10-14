@@ -1,0 +1,41 @@
+---
+
+- name: first run
+  hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    monitor_ip: 127.0.0.1
+
+  tasks:
+  
+  ############# pre Debian 12 requirement
+  - name: "Prepare the apt keyring directory"
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+
+  ##################
+  - name: "Get the grafana gpg key used for promtail and grafana"
+    ansible.builtin.shell:
+      cmd: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg"
+  - name: "Install grafana apt repo"
+    ansible.builtin.shell:
+      cmd: "echo 'deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main' | tee /etc/apt/sources.list.d/grafana.list"
+
+  ##################        
+  - name: "Get telegraf keyring"
+    ansible.builtin.shell:
+      cmd: "curl -fsSL https://repos.influxdata.com/influxdata-archive_compat.key -o /etc/apt/keyrings/influxdata-archive_compat.key "
+  - name: "setup telegraf apt repo"
+    ansible.builtin.shell:
+      cmd: echo "deb [signed-by=/etc/apt/keyrings/influxdata-archive_compat.key] https://repos.influxdata.com/debian stable main" | tee /etc/apt/sources.list.d/influxdata.list
+
+  ##################
+  - name: "Install Telegraf and Promtail packages"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - promtail
+        - telegraf
+

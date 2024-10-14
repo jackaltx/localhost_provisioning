@@ -1,0 +1,102 @@
+---
+
+##
+#
+# Install the required packages
+#
+
+- name: "Required Packages"
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+    - git
+
+##
+#  Download
+#
+
+# for now don't do the download
+
+##
+#  Create Gidea user
+#
+
+- name: Ensure group "somegroup" exists
+  ansible.builtin.group:
+    name: git
+    system: true
+    state: present
+
+- name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+  ansible.builtin.user:
+    name: git
+    group: git
+    comment: 'Git Version Control'
+    home: /home/git
+    system: yes
+    password: "!"
+    shell: /usr/sbin/nologin
+
+##
+#
+#  Build the file structure
+#
+
+- name: Build data directories
+  ansible.builtin.file:
+    path: /var/lib/gitea
+    owner: git
+    group: git
+    mode: '0750'
+    state: directory
+
+- ansible.builtin.file:
+    path: /var/lib/gitea/custom
+    owner: git
+    group: git
+    mode: '0750'
+    state: directory
+
+- ansible.builtin.file:
+    path: /var/lib/gitea/data
+    owner: git
+    group: git
+    mode: '0750'
+    state: directory
+
+- ansible.builtin.file:
+    path: /var/lib/gitea/log
+    owner: git
+    group: git
+    mode: '0750'
+    state: directory
+
+- name: Build etc
+  ansible.builtin.file:
+    path: /etc/gitea
+    owner: root
+    group: git
+    mode: '0770'
+    state: directory
+
+
+##
+#  Prepare the Daemon
+#
+
+- name: Copy systemd file in to place
+  ansible.builtin.copy:
+    src: gitea.service
+    dest: /etc/systemd/system/gitea.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Enable service
+  ansible.builtin.systemd_service:
+    state: started
+    name: gitea
+    enabled: true
+    daemon_reload: true
+
+
