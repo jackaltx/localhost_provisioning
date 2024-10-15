@@ -1,0 +1,9 @@
+---
+
+- name: Client monitoring Services (influxdb and loki)
+  hosts: localhost
+  connection: local
+
+  roles:
+  
+    - influxdb

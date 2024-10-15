@@ -1,0 +1,5 @@
+---
+# defaults file for influxdb
+
+influx_data_path: /mnt/measurements/influxdb
+influx_level: info

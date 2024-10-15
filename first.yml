@@ -1,13 +1,8 @@
 ---
 
-- name: first run
-  hosts: 127.0.0.1
+- name: Install basic packages (more later)
+  hosts: localhost
   connection: local
-
-  vars:
-    myemail: jack@lavnet.net
-    myuser: lavender
-    monitor_ip: 127.0.0.1
 
   tasks:
   

@@ -1,2 +1,5 @@
 ---
 # defaults file for telegraf
+
+influx_data_path: /var/lib/influxdb
+influx_level: warn

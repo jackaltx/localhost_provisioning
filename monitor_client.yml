@@ -1,9 +1,10 @@
 ---
 
 - name: Client monitoring Packages (telegraf and promtail)
-  hosts: 127.0.0.1
+  hosts: localhost
   connection: local
 
+  
   roles:
   
     - telegraf

@@ -1,0 +1,49 @@
+# This minimal config scrape only single log file.
+# Primarily used in rpm/deb packaging where promtail service can be started during system init process.
+# And too much scraping during init process can overload the complete system.
+# https://github.com/grafana/loki/issues/11398
+
+server:
+  #disable: true
+  http_listen_address: 127.0.0.1
+  http_listen_port: 9080
+  grpc_listen_address: 127.0.0.1
+  grpc_listen_port: 9095
+  log_level: warn
+  http_server_write_timeout: 300
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://192.168.40.200:3100/loki/api/v1/push
+    #- url: http://monitor0.a0a0.org:3100/loki/api/v1/push
+    #- url: https://monitor0.a0a0.org:3100/loki/api/v1/push
+
+scrape_configs:
+  
+  # Add an additional scrape config for syslog
+  - job_name: journal
+    journal:
+      json: false
+      path: /var/log/journal
+      max_age: 12h
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels:
+          - __journal__hostname
+        target_label: hostname
+  
+      # example label values: kubelet.service, containerd.service
+      - source_labels:
+          - __journal__systemd_unit
+        target_label: unit
+  
+      # example label values: debug, notice, info, warning, error
+      - source_labels:
+          - __journal_priority_keyword
+        target_label: level
+  
+limits_config:
+

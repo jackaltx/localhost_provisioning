@@ -25,3 +25,16 @@
     pkg:
       - promtail
 
+- name: copy promtail configuration files
+  ansible.builtin.copy:
+    src: client_config.yml
+    dest: /etc/promtail/config.yml
+
+- name: systemd reload configs and restart promtail
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    name: promtail
+    state: restarted
+    enabled: true
+
+

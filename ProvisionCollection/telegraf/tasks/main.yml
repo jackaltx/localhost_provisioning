@@ -23,3 +23,22 @@
     pkg:
       - telegraf
 
+- name: copy telegraf.d configuration files
+  ansible.builtin.copy:
+    src: telegraf.d
+    dest: /etc/telegraf.d
+
+- name: copy default systemd conf file
+  ansible.builtin.copy:
+    src: etc_default_telegraf
+    dest: /etc/telegraf.conf
+
+- name: systemd reload configs and restart promtail
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    name: telegraf
+    state: restarted
+    enabled: true
+
+
+
