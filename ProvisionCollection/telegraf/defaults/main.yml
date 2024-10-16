@@ -1,5 +1,5 @@
 ---
 # defaults file for telegraf
 
-influx_data_path: /var/lib/influxdb
-influx_level: warn
+telegraf_influx_url: "monitor.local"
+telegraf_influx_token: "its a secret==" 

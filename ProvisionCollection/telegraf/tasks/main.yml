@@ -28,10 +28,10 @@
     src: telegraf.d
     dest: /etc/telegraf.d
 
-- name: copy default systemd conf file
-  ansible.builtin.copy:
-    src: etc_default_telegraf
-    dest: /etc/telegraf.conf
+- name: Template config to  /etc/default/telegraf
+  ansible.builtin.template:
+    src: etc_default_telegraf.j2
+    dest: /etc/default/telegraf
 
 - name: systemd reload configs and restart promtail
   ansible.builtin.systemd_service:
