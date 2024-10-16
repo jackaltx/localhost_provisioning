@@ -33,7 +33,7 @@
     src: etc_default_telegraf.j2
     dest: /etc/default/telegraf
 
-- name: systemd reload configs and restart promtail
+- name: systemd reload configs and restart telegraf
   ansible.builtin.systemd_service:
     daemon_reload: true
     name: telegraf

@@ -52,8 +52,59 @@ The only host being worked on is localhost, which is a assigned to a "mylab" gro
 
 ##  Ansible secrets
 
-This area is the next work direction.  I need to distribute sensitive settings in a "free" way, as we all know:  it costs to keep secrets secret.
+I need to distribute sensitive settings in a "free" way, as we all know:  *it costs to keep secrets secret*.
+In that endeavor I am using a couple of tricks to keep unencrypted secrets out of this repository.
 
+First trick:   ansible will take an executable file for the password.  So I created  a program in the file .vault-pass
+
+```
+#!/usr/bin/env python3
+import os
+print(os.environ['PROVISION_VAULT_PASSWORD'])
+```
+
+This returns environment variable *PROVISION_VAULT_PASSWORD*. for now I am setting it in my.bashrc file.
+Which is ok for now. 
+
+The second trick is to use the ansible.cfg file to set the default password file. Like so:
+
+```
+# If set, configures the path to the Vault password file as an alternative to
+# specifying --vault-password-file on the command line.
+#vault_password_file = /path/to/vault_password_file
+vault_password_file = ./.vault-pass
+```
+
+So only the following line needs to be in my .bashrc file"
+
+> export PROVISION_VAULT_PASSWORD= yourProjectassword
+
+I use the inventory file to set the variables I need
+
+```
+    promtail_loki_url: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66323533376364663634653733316364326137616130663039616330343830393836626466333930
+          3134336564316639623363313735633930356537356331360a313138623665353266646266363564
+          35663965323433636263343031373934376235613161333661656637316438653034653861383864
+          3531306331616264310a396566613761326165633763653934363434633163303863316135303839
+          39383132373865396266343766336439616539623532373363346535393661636638
+```
+
+To make that string
+
+```
+$ ansible-vault encrypt_string "http://xxx.yyy.zzz:3100" --name 'promtail_loki_url'
+
+Encryption successful
+promtail_loki_url: !vault |
+          $ANSIBLE_VAULT;1.1;AES256      
+          66323533376364663634653733316364326137616130663039616330343830393836626466333930
+          3134336564316639623363313735633930356537356331360a313138623665353266646266363564
+          35663965323433636263343031373934376235613161333661656637316438653034653861383864
+          3531306331616264310a396566613761326165633763653934363434633163303863316135303839
+          39383132373865396266343766336439616539623532373363346535393661636638
+```
 
 #  Future
 

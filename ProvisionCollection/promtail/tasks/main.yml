@@ -25,10 +25,11 @@
     pkg:
       - promtail
 
-- name: copy promtail configuration files
-  ansible.builtin.copy:
-    src: client_config.yml
+- name: Template config to  /etc/promtail/config.yml
+  ansible.builtin.template:
+    src: client_config.yml.j2
     dest: /etc/promtail/config.yml
+
 
 - name: systemd reload configs and restart promtail
   ansible.builtin.systemd_service:

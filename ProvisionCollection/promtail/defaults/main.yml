@@ -1,2 +1,4 @@
 ---
 # defaults file for promtail
+
+promtail_loki_url:  http://127.0.0.1:3100
