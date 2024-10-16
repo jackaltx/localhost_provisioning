@@ -12,3 +12,6 @@ mylab:
   vars:
     #influx_data_path: /mnt/measurements/influxdb
     influx_level: error
+    telegraf_influx_url: "monitor.mydomain.com"
+    telegraf_influx_token: "br549==" 
+
