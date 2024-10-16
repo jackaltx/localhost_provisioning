@@ -1,0 +1,10 @@
+---
+
+- name: Podman Installation
+  hosts: localhost
+  connection: local
+
+  roles:
+
+    - podman
+  

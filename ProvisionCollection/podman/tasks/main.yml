@@ -1,0 +1,17 @@
+---
+# tasks file for podman
+
+- name: "Basic Packages"
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+    - podman-compose
+    - podman
+    - crun
+  become: true
+
+- name: "setup the registries to use"
+  ansible.builtin.copy:
+    src: site-registries.conf
+    dest: /etc/containers/registries.conf.d
+
