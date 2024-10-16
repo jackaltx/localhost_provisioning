@@ -1,5 +1,5 @@
 ---
 # vars file for influxdb
 
-influx_data_path: /var/lib/influxdb
-influx_level: warn
+#influx_data_path: /var/lib/influxdb
+#influx_level: warn
