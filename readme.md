@@ -47,9 +47,14 @@ ansible-inventory -i inventory --list
 }
 ```
 
-The only host being worked on is localhost, which is a assigned to a "mylab" group.  Ansible [variable precidence](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) is a bit complicate confounds me.
- 
+The only host being worked on is localhost, which is a assigned to a "mylab" group.  Ansible [variable precidence](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) is a bit complicated and confounds me.  
+
+
+##  Ansible secrets
+
+This area is the next work direction.  I need to distribute sensitive settings in a "free" way, as we all know:  it costs to keep secrets secret.
+
 
 #  Future
 
-The roles in "Provision Collection" will be reusable. 
+The roles in "Provision Collection" will be reusable in later projects. 
