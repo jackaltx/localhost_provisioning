@@ -109,3 +109,17 @@ promtail_loki_url: !vault |
 #  Future
 
 The roles in "Provision Collection" will be reusable in later projects. 
+
+## In work list
+
+Environment installations:
+
+- Podman and Container setup
+- MiniKube
+- nfs
+- Support scripts (./bin)
+- Grafana
+- Openstack or Ghost
+- failban
+- ossec
+- ...
