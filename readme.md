@@ -15,6 +15,41 @@ sudo ansible-playbook first.yml
 
 From there I add what I need.  In the end, I remove the directory.   It's not as elegant as using a provisioing service, but it fits my often changing needs.
 
+# Concept notes
+
+##  Ansible inventory
+
+I have chosen a yml structure so I effectively use variables for specific configurations.  For example,  first I need to create an influxd server to generate the access tokens for the telegraf clients.  A handy command to know is:
+
+```
+ansible-inventory -i inventory --list
+{
+    "_meta": {
+        "hostvars": {
+            "localhost": {
+                "influx_level": "error",
+                "telegraf_influx_token": "br549==",
+                "telegraf_influx_url": "monitor.mydomain.com"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "mylab"
+        ]
+    },
+    "mylab": {
+        "hosts": [
+            "localhost"
+        ]
+    }
+}
+```
+
+The only host being worked on is localhost, which is a assigned to a "mylab" group.  Ansible [variable precidence](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable) is a bit complicate confounds me.
+ 
+
 #  Future
 
 The roles in "Provision Collection" will be reusable. 
