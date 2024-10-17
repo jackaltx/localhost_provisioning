@@ -1,2 +1,17 @@
 ---
 # defaults file for nfs-client
+
+cluster_mounts:
+  migration:
+    src: 192.168.40.14:/lavnet-migration-2024 
+    path: /mnt/homee_migration
+    opts: rw,noatime,bg,rsize=131072,wsize=131072,hard,intr,timeo=150,retrans=3
+    state: ephemeral
+    fstype: nfs4
+  gitea:
+    src: 192.168.40.14:/homee_gitea
+    path: /mnt/gitea
+    opts: rw,noatime,bg,rsize=131072,wsize=131072,hard,intr,timeo=150,retrans=3
+    state: mounted
+    fstype: nfs4
+
