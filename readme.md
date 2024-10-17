@@ -4,16 +4,23 @@ This is for local Debian 12 linus machine provisioning.
 
 # Usage
 
-I am provisioning VM and metal Debian 12 machines for my lab.  
-The first one is alway the trickiest to setup.  This is a small collection of ansible scripts 
-designed to bring up a usable platorm.  First I install ansible and git, then I check this out as a sudo user.
+I am provisioning VM and metal Debian 12 machines for my lab. Usually I need to spin up a new system to test and idea. 
+Experiment on an existing system can end up with either instability or loss of what was done.  Setting up a baseline with
+a clean system is time consumin.  To get around that I use a provisioning tool to set an environment. I used to use puppet for this task.
+However the overhead of installing ruby as well as the other required packages was too heavy.  Ansible came along and it works.  
+I don't think as well as puppet, but it is fairly light weight.  I have to install ansible and prepare the user for sudo, then I am off.
+
+This is a small collection of ansible scripts designed to bring up a usable platorm.  First I install ansible. Then I either install enough to check out this repo from github or mount and nfs directory, or use a flash drive.
+
 Tnen I use the first playbook to bring the platform into the fold.  From the base of the directory.
 
 ``` 
 sudo ansible-playbook first.yml
 ```
 
-From there I add what I need.  In the end, I remove the directory.   It's not as elegant as using a provisioing service, but it fits my often changing needs.
+From there I add what I need.  In the end, I remove the directory.   It's not elegant like using a provisioning service, but it fits my ever changing needs.
+
+I did not do a good job of setting the "become" flag.  I run these as root (or sudo) as required. 
 
 # Concept notes
 
