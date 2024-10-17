@@ -1,6 +1,6 @@
 # Overview
 
-This is for local Debian 12 linus machine provisioning.  
+This is for local Debian 12 linux machine provisioning.  
 
 # Usage
 
@@ -127,6 +127,6 @@ Environment installations:
 - Support scripts (./bin)
 - Grafana
 - Openstack or Ghost
-- failban
+- fail2ban
 - ossec
 - ...
