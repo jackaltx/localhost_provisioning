@@ -32,7 +32,7 @@
     system: true
     state: present
 
-- name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+- name: Add the user 'git' with a specific uid and a primary group of 'admin'
   ansible.builtin.user:
     name: git
     group: git
@@ -40,7 +40,7 @@
     home: /home/git
     system: yes
     password: "!"
-    shell: /usr/sbin/nologin
+    shell: /bin/bash
 
 ##
 #
@@ -92,5 +92,3 @@
     name: gitea
     enabled: true
     daemon_reload: true
-
-
