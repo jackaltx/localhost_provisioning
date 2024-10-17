@@ -1,0 +1,49 @@
+---
+# tasks file for minikube
+
+#curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+#sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
+
+- name: Check that the minikube exists
+  stat:
+    path: /usr/local/bin/minikube
+  register: stat_result
+
+
+- block:
+
+  - name: Create temporary install directory
+    ansible.builtin.tempfile:
+      state: directory
+      prefix: minikube_
+    register: tempdir
+
+  - ansible.builtin.debug:
+      var: tempdir
+
+  - ansible.builtin.set_fact:
+      kube_path: "{{ tempdir.path }}"
+
+  - ansible.builtin.debug:
+      var: kube_path
+
+
+  - name: Download minikube
+    ansible.builtin.get_url:
+      url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      dest: "{{ tempdir.path }}/minikube-linux-amd64"
+
+
+  - name: Install minikube to /usr/local/bin
+    ansible.builtin.shell: install minikube-linux-amd64 /usr/local/bin/minikube
+    args:
+      chdir: "{{ tempdir.path }}"
+    become: yes
+
+  - name: remove dir
+    ansible.builtin.file:
+      path: "{{ tempdir.path }}"
+      state: absent
+
+  when: not stat_result.stat.exists
