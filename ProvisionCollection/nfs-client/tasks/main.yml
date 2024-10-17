@@ -1,26 +1,24 @@
 ---
 # tasks file for nfs-client
 
-- name: Install NFS client packages
-  ansible.builtin.apt:
-    update_cache: true
-    pkg:
-    - nfs-common
-  become: true
+- block:
 
-# - name: Mount an NFS volume
-#   ansible.posix.mount:
-#     src: 192.168.40.14:/lavnet-migration-2024 
-#     path: /mnt/homee_migration
-#     opts: rw,noatime,bg,rsize=131072,wsize=131072,hard,intr,timeo=150,retrans=3
-#     state: ephemeral
-#     fstype: nfs4
+  - name: Install NFS client packages
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+      - nfs-common
+    become: true
 
-- name: Mount an NFS volume
-  ansible.posix.mount:
-    src: "{{ item.value.src }}"
-    path: "{{ item.value.path }}"
-    opts: "{{ item.value.opts }}"
-    state: "{{ item.value.state }}"
-    fstype: "{{ item.value.fstype }}"
-  loop: "{{ lookup('dict', cluster_mounts) }}"
+  - name: Mount an NFS volume
+    ansible.posix.mount:
+      src: "{{ item.value.src }}"
+      path: "{{ item.value.path }}"
+      opts: "{{ item.value.opts }}"
+      state: "{{ item.value.state }}"
+      fstype: "{{ item.value.fstype }}"
+    #loop: "{{ lookup('dict', cluster_nfs_mounts) }}"
+    loop: "{{ cluster_nfs_mounts | dict2items }}"
+    become: true
+
+  when:  mount_nfs_share
