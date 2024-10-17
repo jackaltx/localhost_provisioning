@@ -1,7 +1,7 @@
 ---
 
 - name: first run
-  hosts: 127.0.0.1
+  hosts: localhost
   connection: local
 
   tasks:
