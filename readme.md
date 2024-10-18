@@ -112,6 +112,73 @@ promtail_loki_url: !vault |
           3531306331616264310a396566613761326165633763653934363434633163303863316135303839
           39383132373865396266343766336439616539623532373363346535393661636638
 ```
+##  Podman
+
+This is a pretty basic install.  Trouble is, it mostly works till you try to do "systemd" stuff. It does not clean up reliably.  Artifacts get left.  This area is subject to immanent change.
+
+I am not running as root, so here are some important directories to watch.
+
+## Volumes
+
+Here is the where rootles storage is set
+
+```
+$ podman volume create mytestvol
+mytestvol
+lavender@Ryan9:~/.local$ podman volume inspect mytestvol
+[
+     {
+          "Name": "mytestvol",
+          "Driver": "local",
+          "Mountpoint": "/home/lavender/.local/share/containers/storage/volumes/mytestvol/_data",
+          "CreatedAt": "2024-10-17T18:55:13.429437988-05:00",
+          "Labels": {},
+          "Scope": "local",
+          "Options": {},
+          "MountCount": 0,
+          "NeedsCopyUp": true,
+          "NeedsChown": true
+     }
+]
+$ tree /home/lavender/.local/share/containers/storage/volumes/
+/home/lavender/.local/share/containers/storage/volumes/
+└── mytestvol
+    └── _data
+```
+
+## Containers
+
+```
+$ podman run hello-world
+Resolved "hello-world" as an alias (/etc/containers/registries.conf.d/shortnames.conf)
+Trying to pull docker.io/library/hello-world:latest...
+
+$ podman container ls -a
+CONTAINER ID  IMAGE                                 COMMAND     CREATED        STATUS                    PORTS       NAMES
+d345a2aab3b0  docker.io/library/hello-world:latest  /hello      4 minutes ago  Exited (0) 4 minutes ago              priceless_ptolemy
+
+$ tree -L 4 -d ~/.local/share/containers/storage/overlay
+/home/lavender/.local/share/containers/storage/overlay
+├── 291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff
+│   ├── diff
+│   │   ├── dev
+│   │   ├── etc
+│   │   ├── proc
+│   │   ├── run
+│   │   └── sys
+│   └── work
+│       └── work  [error opening dir]
+├── ac28800ec8bb38d5c35b49d45a6ac4777544941199075dff8c4eb63e093aa81e
+│   ├── diff
+│   ├── empty
+│   ├── merged
+│   └── work
+└── l
+    ├── 4HM7AP6PRG5GWM4C5QBQAMFNKB -> ../ac28800ec8bb38d5c35b49d45a6ac4777544941199075dff8c4eb63e093aa81e/diff
+    └── 6ZIUKWDQQMMXLFK4X7YHXJYJKJ -> ../291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff/diff
+
+```
+
 
 #  Future
 
