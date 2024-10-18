@@ -165,29 +165,27 @@ $ podman ps -a
 CONTAINER ID  IMAGE                                 COMMAND     CREATED            STATUS                        PORTS       NAMES
 d345a2aab3b0  docker.io/library/hello-world:latest  /hello      About an hour ago  Exited (0) About an hour ago              priceless_ptolemy
 
-$ tree -L 4 -d ~/.local/share/containers/storage/overlay
-/home/lavender/.local/share/containers/storage/overlay
-├── 291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff
-│   ├── diff
-│   │   ├── dev
-│   │   ├── etc
-│   │   ├── proc
-│   │   ├── run
-│   │   └── sys
-│   └── work
-│       └── work  [error opening dir]
-├── ac28800ec8bb38d5c35b49d45a6ac4777544941199075dff8c4eb63e093aa81e
-│   ├── diff
-│   ├── empty
-│   ├── merged
-│   └── work
-└── l
-    ├── 4HM7AP6PRG5GWM4C5QBQAMFNKB -> ../ac28800ec8bb38d5c35b49d45a6ac4777544941199075dff8c4eb63e093aa81e/diff
-    └── 6ZIUKWDQQMMXLFK4X7YHXJYJKJ -> ../291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff/diff
+$ tree -L 4 -d /run/user/1000/containers
+/run/user/1000/containers
+├── networks
+├── overlay
+├── overlay-containers
+│   └── d345a2aab3b06c5c310c2c0059f7cd5fcdacbfc6ea381c5c316d5e8e6fb27126
+│       └── userdata
+├── overlay-layers
+├── overlay-locks
+├── vfs-containers
+│   └── 7afcfdf6ecb50a107ba66a9f464d0d57f0aa16fcc782761168630f43ca55bcfc
+│       └── userdata
+├── vfs-layers
+└── vfs-locks
 
-$ podman container inspect priceless_ptolemy | grep '291f'
-                    "UpperDir": "/home/lavender/.local/share/containers/storage/overlay/291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff/diff",
-                    "WorkDir": "/home/lavender/.local/share/containers/storage/overlay/291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff/work"
+$ podman container inspect priceless_ptolemy | less
+
+          "Id": "d345a2aab3b06c5c310c2c0059f7cd5fcdacbfc6ea381c5c316d5e8e6fb27126",
+          "Created": "2024-10-17T19:03:38.786375699-05:00",
+           ...
+
 
 ```
 ## run root
