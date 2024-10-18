@@ -1,2 +1,5 @@
 ---
 # defaults file for minikube
+
+minikube_state: 'present'
+minikube_install_kubectl: true

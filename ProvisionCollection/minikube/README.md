@@ -1,38 +1,62 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+[Minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)  is local Kubernetes, focusing on making it easy to learn and develop for Kubernetes.
+
+I like to have [kubectl](https://kubernetes.io/docs/reference/kubectl/) available.  You can use "minikube kubectl --" to get the same effect, but no.  However, I put a flag to make it your choice.
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+What you’ll need:
+
+- 2 CPUs or more
+- 2GB of free memory
+- 20GB of free disk space
+- Internet connection
+- Container or virtual machine manager, such as: Docker, QEMU, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMware FusionWorkstation
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+By default this role installs. There are the state variable is 'present' or 'absent'.  See the playbook for how to use.
+
+
+```
+minikube_state: present
+minikube_install_kubectl: true
+```
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+none
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+- name: MiniKube Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    minikube_state: absent
+
+  roles:
+    - minikube
+```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Jack Lavender, et al.

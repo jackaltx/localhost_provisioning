@@ -1,9 +1,8 @@
 Role Name
 =========
 
-See [to read telegraf details](https://www.influxdata.com/time-series-platform/telegraf/)
-
->Telegraf collects and sends time series data from databases, systems, and IoT sensors. It has no external dependencies, is easy to install, and requires minimal hardware resources.
+[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
+ collects and sends time series data from databases, systems, and IoT sensors. It has no external dependencies, is easy to install, and requires minimal hardware resources.
 
 This is influxdb's collector.  I prefer it to Prometheus for most applications. Prometheus is a pull-based system as it collects data by pulling metrics from targets. Telegraf is an agent that supports both pull and push mechanisms.  I think prometheus is very versatile and straight forward.  But I prefer the features of Influxdb.
 
