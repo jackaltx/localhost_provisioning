@@ -4,6 +4,8 @@
   hosts: localhost
   connection: local
 
-  roles:
+  vars:
+    telegraf_state: absent
 
-    - podman
+  roles:
+    - telegraf

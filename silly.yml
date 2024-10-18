@@ -1,6 +1,6 @@
 ---
 
-- name: Client monitoring Packages (telegraf and promtail)
+- name: Podman Installation
   hosts: localhost
   connection: local
 
@@ -11,11 +11,3 @@
 
     - ansible.builtin.debug:
         var: telegraf_influx_token
-
-    - ansible.builtin.debug:
-        var: promtail_loki_url
-
-  roles:
-  
-    - telegraf
-    - promtail

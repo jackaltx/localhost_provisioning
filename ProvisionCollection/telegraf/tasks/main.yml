@@ -1,44 +1,78 @@
 ---
 # tasks file for telegraf
 
-############# pre Debian 12 requirement
-- name: "Prepare the apt keyring directory"
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
 
-- name: "Get telegraf keyring"
-  ansible.builtin.get_url:
-    url: https://repos.influxdata.com/influxdata-archive_compat.key
-    dest: /etc/apt/keyrings/influxdata-archive_compat.key
+- block: 
 
-- name: "setup telegraf apt repo"
-  ansible.builtin.copy:
-    src: influxdata.list
-    dest: /etc/apt/sources.list.d/influxdata.list
+  ############# pre Debian 12 requirement
+  - name: "Prepare the apt keyring directory"
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+    become: true
 
-- name: "Install Telegraf via Package"
-  ansible.builtin.apt:
-    update_cache: true
-    pkg:
-      - telegraf
+  - name: "Get telegraf keyring"
+    ansible.builtin.get_url:
+      url: https://repos.influxdata.com/influxdata-archive_compat.key
+      dest: /etc/apt/keyrings/influxdata-archive_compat.key
+    become: true
 
-- name: copy telegraf.d configuration files
-  ansible.builtin.copy:
-    src: telegraf.d
-    dest: /etc/telegraf.d
+  - name: "setup telegraf apt repo"
+    ansible.builtin.copy:
+      src: influxdata.list
+      dest: /etc/apt/sources.list.d/influxdata.list
+    become: true
 
-- name: Template config to  /etc/default/telegraf
-  ansible.builtin.template:
-    src: etc_default_telegraf.j2
-    dest: /etc/default/telegraf
+  - name: "Install Telegraf via Package"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - telegraf
+    become: true
 
-- name: systemd reload configs and restart telegraf
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-    name: telegraf
-    state: restarted
-    enabled: true
+  - name: copy telegraf.d configuration files
+    ansible.builtin.copy:
+      src: telegraf.d
+      dest: /etc/telegraf.d
+    become: true
 
+  - name: Template config to  /etc/default/telegraf
+    ansible.builtin.template:
+      src: etc_default_telegraf.j2
+      dest: /etc/default/telegraf
+    become: true
 
+  - name: systemd reload configs and restart telegraf
+    ansible.builtin.systemd_service:
+      daemon_reload: true
+      name: telegraf
+      state: restarted
+      enabled: true
+    become: true
 
+  when: telegraf_state == 'present'
+
+- block:
+
+  - name: "Removed Telegraf via Package"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - telegraf
+      autoremove: true
+      state: absent
+    become: true
+
+  - name: "Remove the config file"
+    ansible.builtin.file:
+      path: /etc/telegraf.d
+      state: absent
+    become: true
+
+  - name: "Remove the default file"
+    ansible.builtin.file:
+      path: /etc/default/telegraf
+      state: absent
+    become: true
+
+  when: telegraf_state == 'absent'

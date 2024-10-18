@@ -4,6 +4,8 @@
   hosts: localhost
   connection: local
 
-  roles:
+  vars:
+    podman_state: absent
 
+  roles:
     - podman

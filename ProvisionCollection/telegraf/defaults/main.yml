@@ -3,3 +3,4 @@
 
 telegraf_influx_url: "monitor.local"
 telegraf_influx_token: "its a secret==" 
+telegraf_state: present
