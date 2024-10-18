@@ -32,9 +32,9 @@
       state: absent
     become: true
 
-  - name: "setup the registries to use"
+  - name: "Remove the registries file"
     ansible.builtin.file:
       path: /etc/containers/registries.conf.d
       state: absent
 
-  when: podman_state == "absent"
+  when: podman_state == 'absent'

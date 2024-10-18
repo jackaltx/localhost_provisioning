@@ -1,0 +1,11 @@
+---
+
+- name: Podman Installation
+  hosts: localhost
+  connection: local
+
+  vars:
+    telegraf_state: absent
+
+  roles:
+    - telegraf

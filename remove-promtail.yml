@@ -1,0 +1,11 @@
+---
+
+- name: Podman Installation
+  hosts: localhost
+  connection: local
+
+  vars:
+    promtail_state: absent
+
+  roles:
+    - promtail
