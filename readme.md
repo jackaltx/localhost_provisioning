@@ -161,6 +161,10 @@ $ podman image ls -a
 REPOSITORY                     TAG         IMAGE ID      CREATED        SIZE
 docker.io/library/hello-world  latest      d2c94e258dcb  17 months ago  28.5 kB
 
+$ podman ps -a
+CONTAINER ID  IMAGE                                 COMMAND     CREATED            STATUS                        PORTS       NAMES
+d345a2aab3b0  docker.io/library/hello-world:latest  /hello      About an hour ago  Exited (0) About an hour ago              priceless_ptolemy
+
 $ tree -L 4 -d ~/.local/share/containers/storage/overlay
 /home/lavender/.local/share/containers/storage/overlay
 ├── 291fea65c5af058d561efbe7e985b2c1f80f2bc37b9d671b38c337780536f3ff
