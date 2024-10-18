@@ -9,7 +9,7 @@
       path: /etc/apt/keyrings
       state: directory
     become: true
-    prom
+
   - name: "Get the grafana gpg key used for promtail and grafana"
     ansible.builtin.shell:
       cmd: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg"

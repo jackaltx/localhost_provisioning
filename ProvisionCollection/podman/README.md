@@ -1,38 +1,56 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+See [https://docs.podman.io/en/latest/](to read podman details)
+
+> Podman is a daemonless, open source, Linux native tool designed to make it easy to find, run, build, share and deploy applications using Open Containers Initiative (OCI) Containers and Container Images.
+
+Currently, this is used it setup a nice rootless "runtime". My goal is to see if I can run systemd rootless.  This should me a lighter weight footprint for daemon containers.  My first test with influxdb have been all over the place.    
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Handled by package install.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+By default this role installs. There are the state variable is 'present' or 'absent'.  See the playbook for how to use.
+
+```
+  podman_state: present
+```
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+none
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+ ```
+- name: Podman Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    podman_state: absent
+
+  roles:
+    - podman
+
+ ```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Jack Lavender, et al.

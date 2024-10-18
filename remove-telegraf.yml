@@ -1,6 +1,6 @@
 ---
 
-- name: Podman Installation
+- name: Telegraf Removal
   hosts: localhost
   connection: local
 

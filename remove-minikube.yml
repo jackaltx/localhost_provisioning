@@ -1,0 +1,11 @@
+---
+
+- name: MiniKube Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    minikube_state: absent
+
+  roles:
+    - minikube

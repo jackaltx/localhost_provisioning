@@ -1,6 +1,6 @@
 ---
 
-- name: Podman Installation
+- name: Podman Removal
   hosts: localhost
   connection: local
 

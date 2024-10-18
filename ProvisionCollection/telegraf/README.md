@@ -1,38 +1,59 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+[Promtail](https://www.influxdata.com/time-series-platform/telegraf/) is an agent which ships the contents of local logs to a private Grafana Loki instance or Grafana Cloud. It is usually deployed to every machine that runs applications which need to be monitored.
+
+This feeds a Loki Log Collector.  Others too, but I am not ready to test others.  It is likely going to dies a slow death as [Grafana Alloy](https://grafana.com/docs/loki/latest/send-data/alloy/) takes over.
+
+This installs a systemd daemon. It can be cleaned up, but that is not very well tested or kept up.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Handled by package install.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+By default this role installs. There are the state variable is 'present' or 'absent'.  See the playbook for how to use.
+
+There are two varables used to communicate with the server.  Look at the inventory.yml for my configuration.
+
+```
+telegraf_influx_url: "monitor.local"
+telegraf_influx_token: "its a secret==" 
+telegraf_state: present
+```
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+none
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+ ```
+- name: Telegraf Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    telegraf_state: absent
+
+  roles:
+    - telegraf
+ ```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Jack Lavender, et al.
