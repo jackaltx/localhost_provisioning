@@ -1,6 +1,7 @@
 # Overview
 
-This is for local Debian 12 linux machine provisioning.  
+This is for local Debian 12 linux machine provisioning. I prefer Centos, but it is no longer.  Rocky has been a rocky ride.
+So for now I am limiteing my work to Debian.
 
 # Usage
 
