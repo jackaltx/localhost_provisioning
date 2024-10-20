@@ -121,8 +121,8 @@ promtail_loki_url: !vault |
 ```
 ##  Podman
 
-I am starting to test containers.  Podman at a rootless-systemd process is intriquing. So far my attempts
-have not been successful. I will document more in the wiki.  
+I am starting to test containers.  Podman as a rootless-systemd process is intriquing. So far my attempts
+have not been successful.  Rooted works as advertised. I will document more in the wiki.  
 
 The podman role will manage install and uninstall.
 
