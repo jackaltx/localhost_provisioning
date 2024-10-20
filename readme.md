@@ -145,12 +145,9 @@ The roles in "Provision Collection" will be reusable in later projects.
 
 Environment installations:
 
-- Podman and Container setup
-- MiniKube
-- nfs
-- Support scripts (./bin)
 - Grafana
-- Openstack or Ghost
-- fail2ban
-- ossec
+- Openstack or Ghost or Bookstack (
+- [fail2ban](https://github.com/fail2ban/fail2ban)
+- [ossec](https://www.ossec.net/)
+- [grassmarlin](https://linuxcontainers.org/incus/introduction/)
 - ...
