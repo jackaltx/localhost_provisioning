@@ -10,6 +10,7 @@
     update_cache: true
     pkg:
     - git
+  become: true
 
 ##
 #  Download
@@ -20,17 +21,19 @@
     url: https://dl.gitea.com/gitea/1.22.3/gitea-1.22.3-linux-amd64
     dest: /usr/local/bin/gitea1
     mode: '0755'
+  become: true
 
 
 ##
 #  Create Gidea user
 #
 
-- name: Ensure group "somegroup" exists
+- name: Ensure group "git" exists
   ansible.builtin.group:
     name: git
     system: true
     state: present
+  become: true
 
 - name: Add the user 'git' with a specific uid and a primary group of 'admin'
   ansible.builtin.user:
@@ -41,6 +44,7 @@
     system: yes
     password: "!"
     shell: /bin/bash
+  become: true
 
 ##
 #
@@ -54,6 +58,7 @@
     group: git
     mode: '0750'
     state: directory
+  become: true
 
 - name: "Next level directories"
   ansible.builtin.file:
@@ -63,6 +68,7 @@
     - custom
     - data
     - log
+  become: true
 
 
 - name: Build etc
@@ -72,6 +78,7 @@
     group: git
     mode: '0750'
     state: directory
+  become: true
 
 
 ##
@@ -85,6 +92,7 @@
     owner: root
     group: root
     mode: '0644'
+  become: true
 
 - name: Enable service and start
   ansible.builtin.systemd_service:
@@ -92,3 +100,4 @@
     name: gitea
     enabled: true
     daemon_reload: true
+  become: true
