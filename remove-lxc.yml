@@ -1,0 +1,11 @@
+---
+
+- name: LXC Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    lxc_state: absent
+
+  roles:
+    - lxc

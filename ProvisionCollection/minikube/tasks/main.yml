@@ -32,6 +32,13 @@
         mode: "0755"
       become: true
 
+    - name: "/usr/local/bin/start-minikube"
+      ansible.builtin.copy:
+        src: start-minikube.sh
+        dest: "/usr/local/bin/start-minikube"
+        mode: "0755"
+      become: true
+
     when: not stat_result.stat.exists
 
   #######
@@ -88,6 +95,12 @@
   - name: "Remove the kubctl binary"
     ansible.builtin.file:
       path: "/usr/local/bin/kubectl"
+      state: absent
+    become: true
+
+  - name: "Remove the suport script"
+    ansible.builtin.file:
+      path: "/usr/local/bin/start-minikube"
       state: absent
     become: true
 

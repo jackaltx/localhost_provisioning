@@ -1,0 +1,5 @@
+---
+# defaults file for lxc
+
+lxc_state: 'present'
+lxc_user: 'lavender'
