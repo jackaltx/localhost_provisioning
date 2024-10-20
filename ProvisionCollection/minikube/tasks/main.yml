@@ -92,12 +92,6 @@
       state: absent
     become: true
 
-  - name: "Remove the kubctl binary"
-    ansible.builtin.file:
-      path: "/usr/local/bin/kubectl"
-      state: absent
-    become: true
-
   - name: "Remove the suport script"
     ansible.builtin.file:
       path: "/usr/local/bin/start-minikube"
