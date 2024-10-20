@@ -1,0 +1,54 @@
+---
+# tasks file for lxc
+
+- block:
+
+  - name: "LXC Packages"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+      - lxc
+    become: true
+
+  - name: "create the root /etc/lxc/default.cont"
+    ansible.builtin.copy:
+      src: lxc_default.conf
+      dest: "/etc/lxc/default.conf"
+    become: true
+
+  - name: "create the user .config/lxc directory"
+    ansible.builtin.file:
+      path: "/home/{{ lxc_user}}/.config/lxc"
+      state: directory
+    become: true
+
+  - name: "create the user .config/lxc/default.conf"
+    ansible.builtin.copy:
+      src: lxc_user_default.conf
+      dest: "/home/{{ lxc_user}}/.config/lxc/default.conf"
+    become: true
+
+  - name: Allow rootless network creation
+    ansible.builtin.lineinfile:
+      path: /etc/lxc/lxc-usernet
+      regexp: "{{ lxc_user }} veth lcbr0 10"
+      line: "{{ lxc_user }} veth lcbr0 10"
+      create: true
+    become: true
+
+  when: lxc_state == 'present'
+
+
+
+- block:
+
+  - name: "Removed lxc Package"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - lxc
+      autoremove: true
+      state: absent
+    become: true
+
+  when: lxc_state == 'absent'

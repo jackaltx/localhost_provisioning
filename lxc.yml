@@ -1,8 +1,8 @@
 ---
 
-- name: Install GITEA Server
+- name: Install LXC Server
   hosts: localhost
   connection: local
   roles:
-    - gitea
+    - lxc
 
