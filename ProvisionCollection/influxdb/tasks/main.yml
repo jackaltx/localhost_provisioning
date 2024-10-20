@@ -6,35 +6,42 @@
   ansible.builtin.file:
     path: /etc/apt/keyrings
     state: directory
+  become: true
 
 - name: "get influx key"
   ansible.builtin.get_url:
     url: https://repos.influxdata.com/influxdata-archive_compat.key
     dest: /etc/apt/keyrings/influxdata-archive_compat.key
+  become: true
 
 - name: "build key for apt"
   ansible.builtin.shell:
     cmd: echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c /etc/apt/keyrings/influxdata-archive_compat.key' | sha256sum -c && cat /etc/apt/keyrings/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+  become: true
 
 - name: "Get influxdb (telegraf) keyring"
   ansible.builtin.get_url:
     url: https://repos.influxdata.com/influxdata-archive_compat.key
     dest: /etc/apt/keyrings/influxdata-archive_compat.key
+  become: true
 
 - name: "setup influxdb (telegraf) apt repo"
   ansible.builtin.copy:
     src: influxdata.list
     dest: /etc/apt/sources.list.d/influxdata.list
+  become: true
 
 - name: "Get influx package"
   ansible.builtin.apt:
     update_cache: true
     pkg:
       - influxdb
+  become: true
 
 - name: Template config to  /etc/influxdb
   ansible.builtin.template:
     src: config.toml.j2
     dest: /etc/influxdb/config.toml
+  become: true
 
 
