@@ -121,129 +121,21 @@ promtail_loki_url: !vault |
 ```
 ##  Podman
 
-This is a pretty basic install.  Trouble is, it mostly works till you try to do "systemd" stuff. It does not clean up reliably.  Artifacts get left.  This area is subject to immanent change.
+I am starting to test containers.  Podman at a rootless-systemd process is intriquing. So far my attempts
+have not been successful. I will document more in the wiki.  
 
-I am not running as root, so here are some important directories to watch.
+The podman role will manage install and uninstall.
 
-## Volumes
+## LXC
 
-Here is the where rootles storage is set
+Yet another cool container.  So far I am not having any luck.  I will likely use a [backport](https://en.wikipedia.org/wiki/Backporting)
+to install a newer version. Debian's release cycle can be slow on package integration.  Which is both a good and bad thing.
 
-```
-$ podman volume create mytestvol
-mytestvol
-lavender@Ryan9:~/.local$ podman volume inspect mytestvol
-[
-     {
-          "Name": "mytestvol",
-          "Driver": "local",
-          "Mountpoint": "/home/lavender/.local/share/containers/storage/volumes/mytestvol/_data",
-          "CreatedAt": "2024-10-17T18:55:13.429437988-05:00",
-          "Labels": {},
-          "Scope": "local",
-          "Options": {},
-          "MountCount": 0,
-          "NeedsCopyUp": true,
-          "NeedsChown": true
-     }
-]
-$ tree /home/lavender/.local/share/containers/storage/volumes/
-/home/lavender/.local/share/containers/storage/volumes/
-└── mytestvol
-    └── _data
-```
+Odds are I will be moving to [incus](https://linuxcontainers.org/incus/introduction/)
 
-## Containers
+## Minikube
 
-```
-$ podman run hello-world
-Resolved "hello-world" as an alias (/etc/containers/registries.conf.d/shortnames.conf)
-Trying to pull docker.io/library/hello-world:latest...
-
-$ podman container ls -a
-CONTAINER ID  IMAGE                                 COMMAND     CREATED        STATUS                    PORTS       NAMES
-d345a2aab3b0  docker.io/library/hello-world:latest  /hello      4 minutes ago  Exited (0) 4 minutes ago              priceless_ptolemy
-
-$ podman image ls -a
-REPOSITORY                     TAG         IMAGE ID      CREATED        SIZE
-docker.io/library/hello-world  latest      d2c94e258dcb  17 months ago  28.5 kB
-
-$ podman ps -a
-CONTAINER ID  IMAGE                                 COMMAND     CREATED            STATUS                        PORTS       NAMES
-d345a2aab3b0  docker.io/library/hello-world:latest  /hello      About an hour ago  Exited (0) About an hour ago              priceless_ptolemy
-
-$ tree -L 4 -d /run/user/1000/containers
-/run/user/1000/containers
-├── networks
-├── overlay
-├── overlay-containers
-│   └── d345a2aab3b06c5c310c2c0059f7cd5fcdacbfc6ea381c5c316d5e8e6fb27126
-│       └── userdata
-├── overlay-layers
-├── overlay-locks
-├── vfs-containers
-│   └── 7afcfdf6ecb50a107ba66a9f464d0d57f0aa16fcc782761168630f43ca55bcfc
-│       └── userdata
-├── vfs-layers
-└── vfs-locks
-
-$ podman container inspect priceless_ptolemy | less
-
-          "Id": "d345a2aab3b06c5c310c2c0059f7cd5fcdacbfc6ea381c5c316d5e8e6fb27126",
-          "Created": "2024-10-17T19:03:38.786375699-05:00",
-           ...
-
-
-```
-## run root
-
-```
-$ tree -L 4 -d /run/user/1000/
-/run/user/1000/
-├── at-spi
-├── containers
-│   ├── networks
-│   ├── overlay
-│   ├── overlay-containers
-│   │   └── d345a2aab3b06c5c310c2c0059f7cd5fcdacbfc6ea381c5c316d5e8e6fb27126
-│   │       └── userdata
-│   ├── overlay-layers
-│   ├── overlay-locks
-│   ├── vfs-containers
-│   │   └── 7afcfdf6ecb50a107ba66a9f464d0d57f0aa16fcc782761168630f43ca55bcfc
-│   │       └── userdata
-│   ├── vfs-layers
-│   └── vfs-locks
-├── crun
-├── dbus-1
-│   └── services
-├── dconf
-├── doc
-│   └── by-app
-├── gcr
-├── gnupg
-├── gvfs
-├── gvfsd
-├── keyring
-├── libpod
-│   └── tmp
-│       └── exits
-├── netns
-├── podman
-├── pulse
-├── speech-dispatcher
-│   ├── log
-│   │   └── debug
-│   └── pid
-└── systemd
-    ├── generator.late
-    │   └── xdg-desktop-autostart.target.wants
-    ├── inaccessible
-    │   └── dir  [error opening dir]
-    ├── transient
-    └── units
-
-```
+my goal is a pure podman install. the 'start-minikube' support script makes that happen.
 
 #  Future
 
