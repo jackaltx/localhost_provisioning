@@ -1,0 +1,11 @@
+---
+
+- name: Podman Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    influxdb_state: absent
+
+  roles:
+    - influxdb

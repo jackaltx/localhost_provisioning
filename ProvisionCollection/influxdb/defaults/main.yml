@@ -1,5 +1,14 @@
 ---
 # defaults file for influxdb
 
-influx_data_path: /mnt/measurements/influxdb
-influx_level: info
+influxdb_data_path: /var/lib/influxdb
+influxdb_level: info
+influxdb_state: 'present'
+
+influxdb_delete_config: true
+influxdb_delete_data: true
+
+influxdb_org:  lavnet 
+influxdb_bucket: lavnet 
+influxdb_username: lavender
+influxdb_password: ThisIsATest 

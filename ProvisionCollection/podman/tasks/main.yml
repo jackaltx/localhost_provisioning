@@ -28,6 +28,7 @@
       - podman-compose
       - podman
       - crun
+      autoclean: true
       autoremove: true
       state: absent
     become: true

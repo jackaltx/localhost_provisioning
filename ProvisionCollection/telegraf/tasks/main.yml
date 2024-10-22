@@ -60,6 +60,7 @@
       pkg:
         - telegraf
       autoremove: true
+      autoclean: true
       state: absent
     become: true
 

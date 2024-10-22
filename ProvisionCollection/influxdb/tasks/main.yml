@@ -1,47 +1,121 @@
 ---
 # tasks file for influxdb
 
-############ pre Debian 12 requirement
-- name: "Prepare the apt keyring directory"
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-  become: true
+- block:
 
-- name: "get influx key"
-  ansible.builtin.get_url:
-    url: https://repos.influxdata.com/influxdata-archive_compat.key
-    dest: /etc/apt/keyrings/influxdata-archive_compat.key
-  become: true
+  ############ pre Debian 12 requirement
+  - name: "Prepare the apt keyring directory"
+    ansible.builtin.file:
+      path: /etc/apt/keyrings
+      state: directory
+    become: true
 
-- name: "build key for apt"
-  ansible.builtin.shell:
-    cmd: echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c /etc/apt/keyrings/influxdata-archive_compat.key' | sha256sum -c && cat /etc/apt/keyrings/influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
-  become: true
+  - name: "get influx key"
+    ansible.builtin.get_url:
+      url: https://repos.influxdata.com/influxdata-archive.key
+      dest: /etc/apt/keyrings/influxdata-archive.key
+    become: true
 
-- name: "Get influxdb (telegraf) keyring"
-  ansible.builtin.get_url:
-    url: https://repos.influxdata.com/influxdata-archive_compat.key
-    dest: /etc/apt/keyrings/influxdata-archive_compat.key
-  become: true
+  - name: "build key for apt"
+    ansible.builtin.shell:
+      cmd: echo echo "943666881a1b8d9b849b74caebf02d3465d6beb716510d86a39f6c8e8dac7515  influxdata-archive.key | sha256sum -c && cat /etc/apt/keyrings/influxdata-archive.key" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+    become: true
 
-- name: "setup influxdb (telegraf) apt repo"
-  ansible.builtin.copy:
-    src: influxdata.list
-    dest: /etc/apt/sources.list.d/influxdata.list
-  become: true
+  - name: "Get influxdb  keyring"
+    ansible.builtin.get_url:
+      url: https://repos.influxdata.com/influxdata-archive.key
+      dest: /etc/apt/keyrings/influxdata-archive.key
+    become: true
 
-- name: "Get influx package"
-  ansible.builtin.apt:
-    update_cache: true
-    pkg:
-      - influxdb
-  become: true
+  - name: "setup influxdb apt repo"
+    ansible.builtin.copy:
+      src: influxdata.list
+      dest: /etc/apt/sources.list.d/influxdata.list
+    become: true
 
-- name: Template config to  /etc/influxdb
-  ansible.builtin.template:
-    src: config.toml.j2
-    dest: /etc/influxdb/config.toml
-  become: true
+  - name: "Get influx package"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - influxdb2
+    become: true
+
+  - name: "Prepare /etc/influxd"
+    ansible.builtin.file:
+      path: /etc/influxdb
+      state: directory
+    become: true
+
+  - name: "Template config for storage in /etc/influxd"
+    ansible.builtin.template:
+      src: config.toml.j2
+      dest: /etc/influxdb/config.toml
+    become: true
+
+  - name: Restart service influxd, if running
+    ansible.builtin.systemd_service:
+      name: influxd
+      state: restarted
+    become: true
+
+  - name: "create initial user"
+    ansible.builtin.shell:
+      cmd: "/usr/bin/influx setup --org {{ influxdb_org }} --bucket {{ influxdb_bucket }} --username {{ influxdb_username }} --password {{ influxdb_password }} --force"
+    become: true
+
+  - name: "create initial user"
+    ansible.builtin.shell:
+      cmd: influx auth create --org lavnet --all-access --description admin
+    become: true
+
+  - name: "create initial user"
+    ansible.builtin.shell:
+      cmd: influx auth create --org lavnet --operator --description operator  
+    become: true
 
 
+  when: influxdb_state == 'present'
+
+- block:
+
+  - name: Stop service influxd, if running
+    ansible.builtin.systemd_service:
+      name: influxd
+      state: stopped
+    become: true
+
+  - name: "Remove Influxd package"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+        - influxdb2
+        - influxdb-cli
+      autoremove: true
+      autoclean: true
+      state: absent
+    become: true
+
+  - block:
+
+    - name: "Remove the config files"
+      ansible.builtin.file:
+        path: /etc/influxdb
+        state: absent
+      become: true
+
+    - name: "Remove the root config files"
+      ansible.builtin.file:
+        path: /root/.influxdbv2
+        state: absent
+      become: true
+
+    when: influxdb_delete_config
+
+  - name: "Remove the data files in {{ influxdb_data_path }}/influxdb"
+    ansible.builtin.file:
+      path: "{{ influxdb_data_path }}"
+      state: absent
+    become: true
+    when: influxdb_delete_data
+
+  when: influxdb_state == 'absent'

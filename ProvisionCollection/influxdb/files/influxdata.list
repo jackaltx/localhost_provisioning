@@ -1,1 +1,1 @@
-deb [signed-by=/etc/apt/keyrings/influxdata-archive_compat.key] https://repos.influxdata.com/debian stable main
+deb [signed-by=/etc/apt/keyrings/influxdata-archive.key] https://repos.influxdata.com/debian stable main

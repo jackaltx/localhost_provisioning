@@ -47,6 +47,7 @@
       update_cache: true
       pkg:
         - lxc
+      autoclean: true
       autoremove: true
       state: absent
     become: true
