@@ -33,7 +33,7 @@
   - name: copy telegraf.d configuration files
     ansible.builtin.copy:
       src: telegraf.d
-      dest: /etc/telegraf.d
+      dest: /etc/telegraf/telegraf.d
     become: true
 
   - name: Template config to  /etc/default/telegraf
@@ -66,7 +66,7 @@
 
   - name: "Remove the config file"
     ansible.builtin.file:
-      path: /etc/telegraf.d
+      path: /etc/telegraf/telegraf.d
       state: absent
     become: true
 
