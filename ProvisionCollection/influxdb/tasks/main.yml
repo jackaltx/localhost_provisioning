@@ -73,6 +73,10 @@
       cmd: influx auth create --org lavnet --operator --description operator  
     become: true
 
+  - name: "import dashboard template"
+    ansible.builtin.shell:
+      cmd: influx apply -u https://raw.githubusercontent.com/influxdata/community-templates/master/linux_system/linux_system.yml
+    become: true
 
   when: influxdb_state == 'present'
 
