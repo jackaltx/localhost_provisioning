@@ -4,12 +4,16 @@
   hosts: localhost
   connection: local
 
-  vars:
-    myemail: jack@lavnet.net
-    myuser: lavender
-    monitor_ip: 127.0.0.1
-
   tasks:
+
+  - name: "install Wireguard"
+    ansible.builtin.apt:
+      update_cache: true
+      pkg:
+      - wireguard
+    become: true
+
+
   - name: :"check if /etc/wireguard exists"
     ansible.builtin.stat:
       path: /etc/wireguard/publickey
