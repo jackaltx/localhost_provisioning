@@ -1,0 +1,36 @@
+---
+
+- name: Copy the certificates in place 
+  hosts: localhost
+  connection: local
+
+  vars:
+
+    acme_root: /root/.acme.sh
+    cert_name: lavnet-monitor.a0a0.org
+
+  tasks:
+
+    - name: "Prepare the cert directory"
+      ansible.builtin.file:
+        path: /etc/lets-encrypt
+        state: directory
+      become: true
+
+    - name: cert
+      ansible.builtin.copy:
+        src: "{{ acme_root }}/{{ cert_name }}/{{ cert_name}}.cer"
+        dest: /etc/lets-encrypt/{{ cert_name}}.cer
+      become: true
+
+    - name: key
+      ansible.builtin.copy:
+        src: "{{ acme_root }}/{{ cert_name }}/{{ cert_name}}.key"
+        dest: /etc/lets-encrypt/{{ cert_name}}.key
+      become: true
+
+    - name: fullchain
+      ansible.builtin.copy:
+        src: "{{ acme_root }}/{{ cert_name }}/fullchain.key"
+        dest: /etc/lets-encrypt/fullchain.key
+      become: true
