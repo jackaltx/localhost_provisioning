@@ -46,6 +46,7 @@
     ansible.builtin.template:
       src: "etc-default-telegraf"
       dest: /etc/default/telegraf
+      mode: 0600
       decrypt: true
     become: true
 
