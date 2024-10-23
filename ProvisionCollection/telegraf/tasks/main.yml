@@ -33,13 +33,20 @@
   - name: copy telegraf.d configuration files
     ansible.builtin.copy:
       src: telegraf.d
-      dest: /etc/telegraf/telegraf.d
+      dest: /etc/telegraf/
     become: true
 
-  - name: Template config to  /etc/default/telegraf
+  # - name: Template config to  /etc/default/telegraf
+  #   ansible.builtin.template:
+  #     src: etc_default_telegraf.j2
+  #     dest: /etc/default/telegraf
+  #   become: true
+
+  - name: copy config to  /etc/default/telegraf
     ansible.builtin.template:
-      src: etc_default_telegraf.j2
-      dest: /etc/default/telegraf
+      src: etc_default_telegraf
+      dest: /etc/default/telegraf/
+      decrypt: true
     become: true
 
   - name: systemd reload configs and restart telegraf
