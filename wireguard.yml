@@ -28,7 +28,7 @@
     args:
       cmd:  "wg genkey | tee /etc/wireguard/privatekey  | wg pubkey > /etc/wireguard/publickey"
     when: not wg_exists.stat.exists
-    become:true
+    become: true
 
   - name: "set wireguard conf permissions"
     ansible.builtin.file:
@@ -37,5 +37,5 @@
     with_list:
       -  publickey
       -  privatekey
-    become:true
+    become: true
 
