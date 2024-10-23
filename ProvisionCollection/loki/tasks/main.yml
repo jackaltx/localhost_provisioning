@@ -1,5 +1,5 @@
 ---
-# tasks file for grafana
+# tasks file for loki
 
 - block:
 
@@ -10,48 +10,51 @@
       state: directory
     become: true
 
-  - name: "Get the grafana gpg key"
+  - name: "Get the Grafana-Loki gpg key used for Grafana and grafana"
     ansible.builtin.shell:
       cmd: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor > /etc/apt/keyrings/grafana.gpg"
     become: true
 
-  - name: "setup Grafana apt repo"
+  - name: "setup Grafana-Loki apt repo"
     ansible.builtin.copy:
       src: grafana.list
       dest: /etc/apt/sources.list.d/grafana.list
     become: true
 
-  - name: "Install Grafana OSS package"
+  - name: "Install Loki OSS package"
     ansible.builtin.apt:
       update_cache: true
       pkg:
-        - grafana
+        - loki
     become: true
 
-  - name: Template config to  /etc/grafana/config.yml
+
+
+
+  - name: Template config to  /etc/loki/config.yml
     ansible.builtin.template:
-      src: client_config.yml.j2
-      dest: /etc/grafana/config.yml
+      src: server-config.yml.j2
+      dest: /etc/loki/config.yml
     become: true
 
-  - name: systemd reload configs and restart Grafana
+  - name: systemd reload configs and restart Loki
     ansible.builtin.systemd_service:
       daemon_reload: true
-      name: grafana-server
+      name: loki
       state: restarted
       enabled: true
     become: true
 
-  when: grafana_state == 'present'
+  when: loki_state == 'present'
 
 
 - block:
 
-  - name: "Remove Grafana package"
+  - name: "Remove Loki package"
     ansible.builtin.apt:
       update_cache: true
       pkg:
-        - grafana
+        - loki
       autoremove: true
       autoclean: true
       state: absent
@@ -59,8 +62,8 @@
 
   - name: "Remove the config file"
     ansible.builtin.file:
-      path: /etc/grafana/config.yml
+      path: /etc/loki/config.yml
       state: absent
     become: true
 
-  when: grafana_state == 'absent'
+  when: loki_state == 'absent'

@@ -1,0 +1,11 @@
+---
+
+- name: Podman Removal
+  hosts: localhost
+  connection: local
+
+  vars:
+    loki_state: absent
+
+  roles:
+    - loki

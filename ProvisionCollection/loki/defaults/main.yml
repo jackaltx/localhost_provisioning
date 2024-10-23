@@ -1,0 +1,10 @@
+---
+# defaults file for loki
+
+loki_state: 'present'
+
+loki_bucketnames: 'lavnet'
+loki_endpoint: 'the-machine:8010'
+loki_access_key_id: 'LokiStore:XXXXXX'
+loki_secret_access_key: 'YYYYYYYYYYYYYYYY'
+ 
