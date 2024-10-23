@@ -44,7 +44,7 @@
 
   - name: copy config to  /etc/default/telegraf
     ansible.builtin.template:
-      src: "etc-default-telegraf"
+      src: default-telegraf
       dest: /etc/default/telegraf
       mode: 0600
       decrypt: true
