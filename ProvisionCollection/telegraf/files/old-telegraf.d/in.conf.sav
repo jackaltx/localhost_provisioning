@@ -1,4 +1,0 @@
-[[inputs.influxdb]]
-  urls = [
-    "http://localhost:8086/metrics"
-  ]

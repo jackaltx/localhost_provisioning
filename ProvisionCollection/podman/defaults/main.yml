@@ -1,4 +1,0 @@
----
-# defaults file for podman
-
-podman_state: present

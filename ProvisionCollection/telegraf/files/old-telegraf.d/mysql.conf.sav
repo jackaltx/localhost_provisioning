@@ -1,3 +1,0 @@
-[[inputs.mysql]]
-  servers = ["telegraf-client:d!ngD0ngSaysI@tcp(localhost:3306)/?tls=false"]
-  #name_suffix = "_mysql"

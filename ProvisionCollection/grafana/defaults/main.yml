@@ -1,5 +1,0 @@
----
-# defaults file for grafana
-
-grafana_state: 'present'
-grafana_https: true
