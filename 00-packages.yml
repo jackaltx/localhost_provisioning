@@ -1,15 +1,13 @@
 ---
 
 - name: Install basic packages (more later)
-  hosts: localhost
-  connection: local
-
+  hosts: serenity
+  
   tasks:
   
-  - name: "Basic Packages"
-    ansible.builtin.apt:
-      update_cache: true
-      pkg:
+  - name: "Install Basic Packages"
+    ansible.builtin.dnf:
+      name:
       - vim
       - tree
       - curl

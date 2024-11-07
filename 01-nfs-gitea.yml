@@ -1,0 +1,8 @@
+---
+
+- name: Mount NFS shares and install gitea
+  hosts: serenity
+  roles:
+    - nfs-client
+    - gitea
+

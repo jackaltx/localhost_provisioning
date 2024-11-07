@@ -1,8 +1,5 @@
 ---
-
 - name: Podman Installation
-  hosts: localhost
-  connection: local
-
+  hosts: serenity
   roles:
     - minikube
