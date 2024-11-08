@@ -1,0 +1,6 @@
+---
+- name: Install  VS Code
+  hosts: serenity
+  become: true
+  roles:
+    - vs-code

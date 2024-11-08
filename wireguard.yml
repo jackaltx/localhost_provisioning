@@ -1,9 +1,7 @@
 ---
 
-- name: first run
-  hosts: localhost
-  connection: local
-
+- name: Install Wireguard (no configure)
+  hosts: serenity
   tasks:
 
   - name: "install Wireguard"
