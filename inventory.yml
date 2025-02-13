@@ -13,7 +13,7 @@ all:
       # mylab hosts
       hosts:
 
-        serenity:
+        firefly:
           ansible_host: localhost
           ansible_connection: local
 
